@@ -66,8 +66,8 @@ end
 
 local function floating_window(geometry)
   -- create internal window
-  local total_width = vim.api.nvim_get_option('columns')
-  local total_height = vim.api.nvim_get_option('lines')
+  local total_width = vim.api.nvim_get_option_value('columns', {})
+  local total_height = vim.api.nvim_get_option_value('lines', {})
   local win_width = geometry.width <= 1 and
       math.ceil(total_width * geometry.width) or total_width
   local win_height = geometry.height <= 1 and
@@ -85,14 +85,15 @@ local function floating_window(geometry)
   local buf = vim.api.nvim_create_buf(false, true)
 
   vim.api.nvim_open_win(buf, true, win_opts)
-  vim.api.nvim_win_set_option(0, 'wrap', config.geometry.wrap)
+  vim.api.nvim_set_option_value('wrap', config.geometry.wrap,
+    { scope = 'local' })
   return buf
 end
 
 local function on_keystroke(key, paste_where)
   -- defines the action to be undertaken upon keystroke in the peekup window
   local search_key = key == '*' and '\\' .. key or key
-  if vim.api.nvim_exec('echo search("^' .. search_key .. ':") > 0', true) ~= '0' then
+  if vim.api.nvim_exec2('echo search("^' .. search_key .. ':") > 0', { output = true }) ~= '0' then
     vim.cmd(':silent! /^' .. search_key .. ':')
     vim.cmd(':noh')
     vim.cmd('execute "normal! ^f:' .. config.on_keystroke.padding + 1 .. 'lvg_"')

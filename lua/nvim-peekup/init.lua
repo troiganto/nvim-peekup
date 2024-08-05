@@ -5,10 +5,10 @@ local peekup = require('nvim-peekup.peekup')
 local config = require('nvim-peekup.config')
 
 local function set_peekup_opts(buf, paste_where)
-  vim.api.nvim_buf_set_option(buf, 'filetype', 'peek')
-  vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
-  vim.api.nvim_buf_set_option(buf, 'modifiable', false)
-  vim.api.nvim_buf_set_option(buf, 'readonly', true)
+  vim.api.nvim_set_option_value('filetype', 'peek', { buf = buf })
+  vim.api.nvim_set_option_value('bufhidden', 'wipe', { buf = buf })
+  vim.api.nvim_set_option_value('modifiable', false, { buf = buf })
+  vim.api.nvim_set_option_value('readonly', true, { buf = buf })
   vim.api.nvim_buf_set_keymap(buf, 'n', '<ESC>', ':q<CR>',
     { nowait = true, noremap = true, silent = true })
   vim.api.nvim_buf_set_keymap(buf, 'n', '<C-j>', '<C-e>',
@@ -17,7 +17,7 @@ local function set_peekup_opts(buf, paste_where)
     { nowait = true, noremap = true, silent = true })
 
   -- setting markers
-  vim.api.nvim_exec(
+  vim.api.nvim_exec2(
     [[
    function! SetMarks() abort
       execute 'keeppatterns /^Numerical'
@@ -31,7 +31,7 @@ local function set_peekup_opts(buf, paste_where)
 
    call SetMarks()
    ]],
-    false
+    { output = false }
   )
 
   -- setting peekup keymaps
