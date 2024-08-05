@@ -53,6 +53,15 @@ local function set_peekup_opts(buf, paste_where)
     { nowait = true, noremap = true, silent = true })
   vim.api.nvim_buf_set_keymap(buf, 'n', '<Up>', '[`',
     { nowait = true, noremap = true, silent = true })
+
+  vim.api.nvim_create_augroup('PeekAutoClose', {})
+  vim.api.nvim_create_autocmd('WinLeave', {
+    group = 'PeekAutoClose',
+    buffer = buf,
+    callback = function()
+      vim.api.nvim_win_close(0, false)
+    end
+  })
 end
 
 local function peekup_open(paste_where)

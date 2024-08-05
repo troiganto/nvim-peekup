@@ -30,24 +30,13 @@ else
 endif
 
 "" functions
-augroup PeekAutoClose
-    autocmd!
-    autocmd WinLeave * call s:PeekClose()
-augroup END
-
-function s:PeekClose() abort
-    for i in range(1, winnr('$'))
-        if getbufvar(winbufnr(i), '&filetype') ==? 'peek'
-            close
-        endif
-    endfor
-endfunction
-
 function PeekupEmptyRegisters() abort
     for i in range(34,122)
         silent! call setreg(nr2char(i), [])
     endfor
-    call s:PeekClose()
+    if getbufvar('', '&filetype') ==? 'peek'
+        close
+    endif
     lua require('nvim-peekup').peekup_open()
 endfunction
 
