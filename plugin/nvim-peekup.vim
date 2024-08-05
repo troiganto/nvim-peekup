@@ -10,45 +10,45 @@ nnoremap <Plug>PeekupEmptyRegisters :call PeekupEmptyRegisters()<CR>
 
 "" assign keybindings
 if exists('g:peekup_open')
-	execute 'nmap ' . g:peekup_open . ' <Plug>PeekupOpen'
+    execute 'nmap ' . g:peekup_open . ' <Plug>PeekupOpen'
 else
-	nmap "" <Plug>PeekupOpen
+    nmap "" <Plug>PeekupOpen
 endif
 
 if exists('g:peekup_paste_after')
-	execute 'nmap' . g:peekup_paste_after .  ' <Plug>PeekupPasteAfter'
+    execute 'nmap' . g:peekup_paste_after .  ' <Plug>PeekupPasteAfter'
 endif
 
 if exists('g:peekup_paste_before')
-	execute 'nmap' . g:peekup_paste_before .  ' <Plug>PeekupPasteBefore'
+    execute 'nmap' . g:peekup_paste_before .  ' <Plug>PeekupPasteBefore'
 endif
 
 if exists('g:peekup_empty_registers')
-	execute 'nmap' . g:peekup_empty_registers .  ' <Plug>PeekupEmptyRegisters'
+    execute 'nmap' . g:peekup_empty_registers .  ' <Plug>PeekupEmptyRegisters'
 else
-	nmap "x <Plug>PeekupEmptyRegisters
+    nmap "x <Plug>PeekupEmptyRegisters
 endif
 
 "" functions
 augroup PeekAutoClose
-	autocmd!
-	autocmd WinLeave * call s:PeekClose()
+    autocmd!
+    autocmd WinLeave * call s:PeekClose()
 augroup END
 
 function s:PeekClose() abort
-	for i in range(1, winnr('$'))
+    for i in range(1, winnr('$'))
         if getbufvar(winbufnr(i), '&filetype') ==? 'peek'
-			close
-		endif
+            close
+        endif
     endfor
 endfunction
 
 function PeekupEmptyRegisters() abort
-	for i in range(34,122)
-		silent! call setreg(nr2char(i), [])
-	endfor
-	call s:PeekClose()
-	lua require('nvim-peekup').peekup_open()
+    for i in range(34,122)
+        silent! call setreg(nr2char(i), [])
+    endfor
+    call s:PeekClose()
+    lua require('nvim-peekup').peekup_open()
 endfunction
 
 let g:loaded_peekup = 1
